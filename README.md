@@ -59,12 +59,7 @@ The project is structured into the following layers:
    python Banking.py
    ```
 4. Expected output:
-   ```
-   Created Account: ACC123, Balance: $0.0, Customer: John Doe
-   Account Statement for ACC123
-   Transactions:
-   deposit: $500
-   withdraw: $200
-   Final Balance: $300.0
+![image](https://github.com/user-attachments/assets/def45f09-a493-48f9-ae34-5980c8c70241)
+
    ```
 
