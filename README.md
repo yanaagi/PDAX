@@ -60,5 +60,4 @@ The project is structured into the following layers:
 4. Expected output:
 ![image](https://github.com/user-attachments/assets/def45f09-a493-48f9-ae34-5980c8c70241)
 
-   ```
 
