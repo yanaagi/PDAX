@@ -24,7 +24,6 @@ class Account:
     def get_balance(self):
         return self.balance
 
-
 class Customer:
     def __init__(self, customer_id, name, email, phone_number):
         self.customer_id = customer_id
@@ -47,16 +46,48 @@ class AccountRepository:
     def find_accounts_by_customer_id(self, customer_id):
         return [acc for acc in self.accounts.values() if acc.customer_id == customer_id]
 
-
 # Use Case Layer
 class CreateAccountUseCase:
     def __init__(self, account_repository):
         self.account_repository = account_repository
+        self.customers = {} 
 
-    def create_account(self, account_id, customer_id, account_number):
+    def create_account(self, account_id, customer_id, account_number, name, email, phone_number):
+        customer = Customer(customer_id, name, email, phone_number)
+        self.customers[customer_id] = customer
         account = Account(account_id, customer_id, account_number)
         self.account_repository.save_account(account)
-        return account
+        return account, customer
+
+class MakeTransactionUseCase:
+    def __init__(self, account_repository):
+        self.account_repository = account_repository
+
+    def make_transaction(self, account_id, amount, transaction_type):
+        account = self.account_repository.find_account_by_id(account_id)
+        if not account:
+            raise ValueError("Account not found")
+        if transaction_type == "deposit":
+            account.deposit(amount)
+        elif transaction_type == "withdraw":
+            account.withdraw(amount)
+        else:
+            raise ValueError("Invalid transaction type")
+
+class GenerateAccountStatementUseCase:
+    def __init__(self, account_repository):
+        self.account_repository = account_repository
+
+    def generate_account_statement(self, account_id):
+        account = self.account_repository.find_account_by_id(account_id)
+        if not account:
+            raise ValueError("Account not found")
+        statement = f"Account Statement for {account.account_number}\n"
+        statement += "Transactions:\n"
+        for transaction in account.transactions:
+            statement += f"{transaction[0]}: ${transaction[1]}\n"
+        statement += f"Final Balance: ${account.get_balance()}\n"
+        return statement
 
 
 class MakeTransactionUseCase:
@@ -100,9 +131,9 @@ if __name__ == "__main__":
     transaction_uc = MakeTransactionUseCase(repo)
     statement_uc = GenerateAccountStatementUseCase(repo)
 
-    # Create an account
-    account = create_account_uc.create_account(1, 101, "ACC123")
-    print(f"Created Account: {account.account_number}, Balance: ${account.get_balance()}")
+    # Create an account with customer details
+    account, customer = create_account_uc.create_account(1, 101, "ACC123", "John Doe", "john@example.com", "1234567890")
+    print(f"Created Account: {account.account_number}, Balance: ${account.get_balance()}, Customer: {customer.name}")
 
     # Perform transactions
     transaction_uc.make_transaction(1, 500, "deposit")
