@@ -1,5 +1,4 @@
 # PDAX
-
 ## Overview
 This is a simple banking system implemented in Python, following a layered architecture approach. The system allows for account creation, transactions (deposits and withdrawals), and account statement generation.
 
