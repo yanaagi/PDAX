@@ -7,6 +7,7 @@ class Account:
         self.balance = balance
         self.transactions = []
 
+    
     def deposit(self, amount):
         if amount > 0:
             self.balance += amount
